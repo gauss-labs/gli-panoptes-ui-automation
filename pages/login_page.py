@@ -2,7 +2,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 
 class LoginPage(BasePage):
-    URL = "https://gli-vm-web.dev.mothership.gausslabs.ai/login"
+    URL = "/login"
 
     def __init__(self, page: Page, app_url: str):
         super().__init__(page, app_url)
@@ -30,7 +30,8 @@ class LoginPage(BasePage):
         self.password_invalid_message = page.get_by_text("Password you entered is invalid.")
     
     def navigate(self) -> None:
-        self.page.goto(f"{self.app_url}/login")
+        super().navigate(self.URL)
+        # self.page.goto(f"{self.app_url}/login")
 
     def verify_login_page_loaded(self) -> None:
         expect(self.panoptes_logo).to_be_visible()
@@ -62,18 +63,20 @@ class LoginPage(BasePage):
         self.login_button.click()
 
     def verify_login_successful(self) -> None:
-        expect(self.page).not_to_have_url(f"{self.app_url}/login")
+        expect(self.page).not_to_have_url(f"{self.app_url}{self.URL}")
 
     def verify_invalid_login_message(self) -> None:
-        # expect(self.invalid_login_message).to_be_visible()
-        # expect(self.invalid_login_message).to_have_count(2)
         expect(self.invalid_login_message.first).to_be_visible()
 
     def verify_validation_message(self, message: str) -> None:
         expect(self.page.get_by_text(message, exact=True)).to_be_visible()
 
     def verify_still_on_login_page(self) -> None:
-        expect(self.page).to_have_url(f"{self.app_url}/login")
+        expect(self.page).to_have_url(f"{self.app_url}{self.URL}")
         expect(self.login_button).to_be_visible()
 
-    
+    def verify_username_required_message(self) -> None:
+        expect(self.username_required_message).to_be_visible()
+
+    def verify_password_invalid_message(self) -> None:
+        expect(self.password_invalid_message).to_be_visible()

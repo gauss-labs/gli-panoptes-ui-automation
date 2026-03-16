@@ -1,0 +1,17 @@
+{
+  "mothership_dev": {
+    "base_url": "https://gli-vm-web.dev.mothership.gausslabs.ai",
+    "username": "admin",
+    "password": "gausslabs"
+  },
+  "mothership_stg": {
+    "base_url": "https://gli-vm-web.stg.mothership.gausslabs.ai",
+    "username": "admin112",
+    "password": "gausslabs1!"
+  },
+  "demo": {
+    "base_url": "https://demo.gausslabs.ai",
+    "username": "demo_user",
+    "password": "demo_password"
+  }
+}

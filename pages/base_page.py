@@ -9,5 +9,5 @@ class BasePage:
         self.app_url = app_url
         self.left_navigation = LeftNavigation(page)
 
-    def navigate(self, path: str) -> None:
+    def navigate(self, path: str = "") -> None:
         self.page.goto(f"{self.app_url}{path}")

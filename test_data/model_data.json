@@ -1,0 +1,26 @@
+{
+  "model_creation": {
+    "valid_model_1": {
+      "model_name": "qa_auto_model_001",
+      "model_type": "Single Chamber",
+      "prediction_time": "Real Time",
+      "product": "5QQ",
+      "main_operation": "SLIM5 ETCH",
+      "recipe": "QQ_SLIM5_R09_M15",
+      "steps": ["4", "9", "11"],
+      "measurement_operation": "SLIM5 ETCH CLN CD",
+      "measurement_parameter": "SLIM5_SHIFT_WF-EX_NEW"
+    }
+  },
+  "models_search": {
+    "existing_model_name": "test-vj-3",
+    "partial_model_name": "integration-bottle",
+    "non_existing_model_name": "THIS_MODEL_SHOULD_NOT_EXIST_12345"
+  },
+  "known_model_details": {
+    "model_name": "test-vj-3",
+    "child_row_text": "TEST_PRODUCT · Measurement Operation · ThicknessCenter",
+    "expected_status": "Active",
+    "expected_owner": "admin"
+  }
+}

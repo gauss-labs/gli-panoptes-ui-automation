@@ -1,0 +1,13 @@
+{
+  "models_filters": {
+    "prediction_type": {
+      "single_chamber": "Single Chamber",
+      "real_time": "Real Time"
+    },
+    "model_status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "failed": "Failed"
+    }
+  }
+}

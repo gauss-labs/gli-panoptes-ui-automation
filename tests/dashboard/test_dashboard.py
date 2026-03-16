@@ -5,19 +5,25 @@ from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
 
 @pytest.fixture
-def logged_in_dashboard(page: Page, app_url: str) -> DashboardPage:
-    """
-    Logs into the application and lands on Dashboard page.
-    Returns DashboardPage object for reuse in tests.
-    """
-    login_page = LoginPage(page, app_url)
-    dashboard_page = DashboardPage(page, app_url)
-
-    login_page.navigate()
-    login_page.login("admin", "gausslabs")
-
+def logged_in_dashboard(logged_in_page, app_url: str) -> DashboardPage:
+    dashboard_page = DashboardPage(logged_in_page, app_url)
     dashboard_page.verify_dashboard_page_loaded()
+
     return dashboard_page
+# @pytest.fixture
+# def logged_in_dashboard(page: Page, app_url: str) -> DashboardPage:
+#     """
+#     Logs into the application and lands on Dashboard page.
+#     Returns DashboardPage object for reuse in tests.
+#     """
+#     login_page = LoginPage(page, app_url)
+#     dashboard_page = DashboardPage(page, app_url)
+
+#     login_page.navigate()
+#     login_page.login("admin", "gausslabs")
+
+#     dashboard_page.verify_dashboard_page_loaded()
+#     return dashboard_page
 
 # =========================================================
 # Smoke / Page Load
@@ -157,8 +163,7 @@ def test_recently_viewed_models_section_is_visible(logged_in_dashboard: Dashboar
     """
     Verify that the Recently Viewed Models section is visible on the dashboard.
     """
-    expect(logged_in_dashboard.recently_viewed_models_card).to_be_visible()
-    expect(logged_in_dashboard.recently_viewed_models_heading).to_be_visible()
+    logged_in_dashboard.verify_recently_viewed_models_section_visible()
 
 @pytest.mark.regression
 @pytest.mark.dashboard

@@ -113,6 +113,10 @@ class DashboardPage(BasePage):
         expect(self.others_models_row).to_be_visible()
         expect(self.my_models_donut_chart_canvas).to_be_visible()
 
+    def verify_recently_viewed_models_section_visible(self) -> None:
+        expect(self.recently_viewed_models_card).to_be_visible()
+        expect(self.recently_viewed_models_heading).to_be_visible()
+
     def verify_recently_viewed_models_empty_state(self) -> None:
         expect(self.no_recently_viewed_models_text).to_be_visible()
 

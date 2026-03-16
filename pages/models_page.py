@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from email.mime import text
 import re
 from playwright.sync_api import Locator, Page, expect
 
@@ -259,9 +258,33 @@ class ModelsPage(BasePage):
 
     def verify_result_summary_visible(self) -> None:
         expect(self.result_summary_text.first).to_be_visible()
+    
+    def verify_header_elements_visible(self) -> None:
+        expect(self.page_title).to_be_visible()
+        expect(self.create_model_button).to_be_visible()
+        expect(self.search_input).to_be_visible()
+        expect(self.filter_button).to_be_visible()
+        expect(self.filter_set_dropdown).to_be_visible()
+    
+    def verify_toolbar_controls_visible(self) -> None:
+        expect(self.performance_window_dropdown).to_be_visible()
+        expect(self.accuracy_performance_button).to_be_visible()
+        expect(self.quickview_switch).to_be_visible()
 
     def verify_model_present_in_table(self, model_name: str) -> None:
         expect(self.get_model_link(model_name)).to_be_visible()
 
     def verify_search_value(self, expected_value: str) -> None:
         expect(self.search_input).to_have_value(expected_value)
+
+    # ---------------------------------------------------------------------
+    # Helper methods
+    # ---------------------------------------------------------------------
+    def _is_button_enabled(self, button: Locator) -> bool:
+        aria_disabled = button.get_attribute("aria-disabled")
+        disabled_attr = button.get_attribute("disabled")
+
+        if aria_disabled == "true" or disabled_attr is not None:
+            return False
+
+        return button.is_enabled()

@@ -1,0 +1,29 @@
+{
+  "valid_login": {
+    "username_key": "admin",
+    "password_key": "gausslabs"
+  },
+  "invalid_login_cases": [
+    {
+      "username": "wronguser",
+      "password": "wrongpass",
+      "expected_message": "Invalid username or password."
+    },
+    {
+      "username": "",
+      "password": "",
+      "expected_username_error": "Username is required",
+      "expected_password_error": "Password you entered is invalid."
+    },
+    {
+      "username": "admin",
+      "password": "",
+      "expected_password_error": "Password you entered is invalid."
+    },
+    {
+      "username": "",
+      "password": "gausslabs",
+      "expected_username_error": "Username is required"
+    }
+  ]
+}
