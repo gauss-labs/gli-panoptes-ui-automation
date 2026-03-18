@@ -12,15 +12,35 @@
       "measurement_parameter": "SLIM5_SHIFT_WF-EX_NEW"
     }
   },
+
   "models_search": {
-    "existing_model_name": "test-vj-3",
-    "partial_model_name": "integration-bottle",
-    "non_existing_model_name": "THIS_MODEL_SHOULD_NOT_EXIST_12345"
+    "mothership_dev": {
+      "existing_model_name": "test-vj-3",
+      "partial_model_name": "integration-bottle",
+      "non_existing_model_name": "THIS_MODEL_SHOULD_NOT_EXIST_12345"
+    },
+    "demo": {
+      "existing_model_name": "M7LP_SOP_ETCH",
+      "partial_model_name": "QNA",
+      "non_existing_model_name": "THIS_MODEL_SHOULD_NOT_EXIST_12345"
+    }
   },
+
   "known_model_details": {
-    "model_name": "test-vj-3",
-    "child_row_text": "TEST_PRODUCT · Measurement Operation · ThicknessCenter",
-    "expected_status": "Active",
-    "expected_owner": "admin"
+    "mothership_dev": {
+      "model_name": "test-vj-3",
+      "child_row_texts": "TEST_PRODUCT · Measurement Operation · ThicknessCenter",
+      "expected_status": "Active",
+      "expected_owner": "admin"
+    },
+    "demo": {
+      "model_name": "M7LP_SOP_ETCH",
+      "child_row_texts": [
+        "M7LP · Poly Etch CD · CDAvg",
+        "M7LP · Poly Etch CD · CDEdge"
+      ],
+      "expected_status": "Active",
+      "expected_owner": "vmuser"
+    }
   }
 }

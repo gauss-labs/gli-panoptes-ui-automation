@@ -20,7 +20,7 @@ class ModelsPage(BasePage):
         # Opens the "All filters" dialog/modal.
         self.filter_button: Locator = page.locator("button[aria-haspopup='dialog']").first
 
-        # Saved filter-set dropdown (currently "Select filter set").
+        # Saved filter-set dropdown (currently "Select filter set"). [only in mothership env]
         self.filter_set_dropdown: Locator = page.get_by_role("button", name=re.compile(r"select filter set", re.I))
 
          # Search input for model name search.

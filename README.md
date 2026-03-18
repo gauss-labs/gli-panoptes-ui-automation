@@ -30,40 +30,40 @@ Current automated tests:
 
 panoptes-ui-tests
 │
-├── pages/ → Page Object Model classes  
-│   ├── base_page.py
-│   ├── login_page.py
-│   ├── dashboard_page.py
-│   ├── models_page.py
-│   └── components/
-│       └── filter_modal.py
+├── pages/ # Page Object Model classes
+│ ├── base_page.py
+│ ├── login_page.py
+│ ├── dashboard_page.py
+│ ├── models_page.py
+│ └── components/
+│ └── filter_modal.py
 │
-├── tests/ → UI test cases 
-│   ├── authentication/
-│       └── test_login.py
-│   ├── dashboard/
-│       └── test_dashboard.py
-│   └── models/
-│       └── test_models_page.py
-│       └── test_models_filtering.py
+├── tests/ # UI test cases
+│ ├── authentication/
+│ │ └── test_login.py
+│ ├── dashboard/
+│ │ └── test_dashboard.py
+│ └── models/
+│ ├── test_models_page.py
+│ └── test_models_filtering.py
 │
 ├── test_data/
-│   ├── env_data.json
-│   ├── login_data.json
-│   ├── model_data.json
-│   └── filter_data.json
+│ ├── env_data.json
+│ ├── login_data.json
+│ ├── model_data.json
+│ └── filter_data.json
 │
 ├── utils/
-│   ├── data_reader.py
-│   └── env_helper.py
+│ ├── data_reader.py
+│ └── env_helper.py
 │
-├── conftest.py → pytest fixtures and browser setup
+├── conftest.py # pytest fixtures and browser setup
 ├── pytest.ini
 └── README.md
 
 ## Installation
 
-pip install -r requirements.txt
+pip install -r requirements.txt\ 
 playwright install
 
 
@@ -72,7 +72,8 @@ playwright install
 Environment settings are stored in:
     test_data/env.json
 
-Example:
+Example:\
+```json
 {
   "mothership_dev": {
     "base_url": "https://gli-vm-web.dev.mothership.gausslabs.ai",
@@ -98,19 +99,24 @@ Examples include:
 
 ## Run tests
 
-Run all tests:
+Run all tests:\
     pytest
 
-Run tests for a specific environment:
+Run tests for a specific environment:\
     pytest --env=mothership_dev
 
-Run only smoke tests:
+Run only smoke tests:\
     pytest -m smoke
 
-Run only Models tests:
+Run only Models tests:\
     pytest -m models
 
 ## Recent Updates
+- 03/18/2026
+- Enhance filter modal automation with dynamic selection and improved stability
+- Replaced hardcoded filter options with runtime-discovered values
+- Added validation for selected filter count and chip area updates
+- Added timeout_ms for mitigate flakiness due to slow filter moda rendering
 
 - 03/16/2026
 - Introduced environment-based configuration using env_data.json
