@@ -1,18 +1,17 @@
 import re
 
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect, Page
 
-from conftest import env_name
 from pages.login_page import LoginPage
 from pages.models_page import ModelsPage
 
 @pytest.fixture
-def models_page(logged_in_page, app_url: str) -> ModelsPage:
+def models_page(logged_in_page, app_url: str, env_name: str) -> ModelsPage:
     """
     Logs in first, then returns the Models page object.
     """
-    models_page = ModelsPage(logged_in_page, app_url)
+    models_page = ModelsPage(logged_in_page, app_url, env_name)
     models_page.left_navigation.go_to_models()
     models_page.wait_for_page_to_load()
 

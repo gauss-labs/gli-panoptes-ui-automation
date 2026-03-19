@@ -1,12 +1,12 @@
-from playwright.sync_api import Page, Locator, expect
+from playwright.sync_api import Locator, Page, expect
 
 from pages.base_page import BasePage
 
 class DashboardPage(BasePage):
     URL_PATH = "/"
 
-    def __init__(self, page: Page, app_url: str) -> None:
-        super().__init__(page, app_url)
+    def __init__(self, page: Page, app_url: str, env_name: str) -> None:
+        super().__init__(page, app_url, env_name)
         
         # === Main page / header ===
         self.main_content: Locator = page.locator("main")

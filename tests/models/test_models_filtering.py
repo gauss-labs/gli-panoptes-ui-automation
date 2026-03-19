@@ -1,20 +1,20 @@
-import pytest
 import logging
-from playwright.sync_api import Page, expect
-from pytest_playwright.pytest_playwright import page
 
+import pytest
+from playwright.sync_api import expect, Page
+
+from pages.components.filter_modal import FilterModal
 from pages.login_page import LoginPage
 from pages.models_page import ModelsPage
-from pages.components.filter_modal import FilterModal
 
 logger = logging.getLogger(__name__)
 
 @pytest.fixture
-def models_page(logged_in_page, app_url: str) -> ModelsPage:
+def models_page(logged_in_page, app_url: str, env_name: str) -> ModelsPage:
     """
     Logs in first, then navigates to the Models page.
     """
-    models_page = ModelsPage(logged_in_page, app_url)
+    models_page = ModelsPage(logged_in_page, app_url, env_name)
     models_page.left_navigation.go_to_models()
     models_page.wait_for_page_to_load()
 

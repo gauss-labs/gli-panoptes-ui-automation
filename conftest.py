@@ -47,18 +47,18 @@ def model_test_data() -> dict:
     return load_json("model_data.json")
 
 @pytest.fixture
-def login_page(page, app_url) -> LoginPage:
-    return LoginPage(page, app_url)
+def login_page(page, app_url, env_name) -> LoginPage:
+    return LoginPage(page, app_url, env_name)
 
 
 @pytest.fixture
-def dashboard_page(page, app_url) -> DashboardPage:
-    return DashboardPage(page, app_url)
+def dashboard_page(page, app_url, env_name) -> DashboardPage:
+    return DashboardPage(page, app_url, env_name)
 
 
 @pytest.fixture
-def models_page(page, app_url) -> ModelsPage:
-    return ModelsPage(page, app_url)
+def models_page(page, app_url, env_name) -> ModelsPage:
+    return ModelsPage(page, app_url, env_name)
 
 
 @pytest.fixture
@@ -66,8 +66,8 @@ def filter_modal(page) -> FilterModal:
     return FilterModal(page)
 
 @pytest.fixture
-def logged_in_page(page, env_config):
-    login_page = LoginPage(page, env_config["base_url"])
+def logged_in_page(page, env_config, env_name):
+    login_page = LoginPage(page, env_config["base_url"], env_name)
     login_page.navigate()
     login_page.login(env_config["username"], env_config["password"])
     return page

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+
 from playwright.sync_api import Locator, Page, expect
 
 from pages.base_page import BasePage
@@ -8,8 +9,8 @@ from pages.base_page import BasePage
 class ModelsPage(BasePage):
     URL_PATH = "/models"
 
-    def __init__(self, page: Page, app_url: str):
-        super().__init__(page, app_url)
+    def __init__(self, page: Page, app_url: str, env_name: str):
+        super().__init__(page, app_url, env_name)
 
         # ===== Page / header =====
         self.main_content: Locator = page.locator("main")
@@ -20,7 +21,7 @@ class ModelsPage(BasePage):
         # Opens the "All filters" dialog/modal.
         self.filter_button: Locator = page.locator("button[aria-haspopup='dialog']").first
 
-        # Saved filter-set dropdown (currently "Select filter set"). [only in mothership env]
+        # Saved filter-set dropdown; currently available only in mothership environment. 
         self.filter_set_dropdown: Locator = page.get_by_role("button", name=re.compile(r"select filter set", re.I))
 
          # Search input for model name search.
@@ -264,8 +265,14 @@ class ModelsPage(BasePage):
         expect(self.create_model_button).to_be_visible()
         expect(self.search_input).to_be_visible()
         expect(self.filter_button).to_be_visible()
-        expect(self.filter_set_dropdown).to_be_visible()
-    
+
+        #Only validate filter-set dropdown in supported environment
+        if self.supports_filter_set_dropdown():
+            expect(self.filter_set_dropdown).to_be_visible()
+
+    def supports_filter_set_dropdown(self) -> bool:
+        return self.env_name in {"mothership_dev", "mothership_stg"}
+
     def verify_toolbar_controls_visible(self) -> None:
         expect(self.performance_window_dropdown).to_be_visible()
         expect(self.accuracy_performance_button).to_be_visible()

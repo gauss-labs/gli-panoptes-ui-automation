@@ -112,6 +112,13 @@ Run only Models tests:\
     pytest -m models
 
 ## Recent Updates
+- 03/19/2026
+- Added env_name to BasePage to support environment-specific test logic
+- Refactored page objects and fixtures to pass env_name consistently
+- Removed --headed from pytest.ini and settings.json for CI-friendly execution
+- Headed mode is now enabled only via CLI when needed for debugging.
+- Grouped import statements and sorted them alphabetically within each group
+
 - 03/18/2026
 - Enhance filter modal automation with dynamic selection and improved stability
 - Replaced hardcoded filter options with runtime-discovered values
