@@ -1,17 +1,17 @@
 import re
 
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect, Page
 
 from pages.login_page import LoginPage
 from pages.models_page import ModelsPage
 
 @pytest.fixture
-def models_page(logged_in_page, app_url: str) -> ModelsPage:
+def models_page(logged_in_page, app_url: str, env_name: str) -> ModelsPage:
     """
     Logs in first, then returns the Models page object.
     """
-    models_page = ModelsPage(logged_in_page, app_url)
+    models_page = ModelsPage(logged_in_page, app_url, env_name)
     models_page.left_navigation.go_to_models()
     models_page.wait_for_page_to_load()
 
@@ -63,11 +63,11 @@ def test_verify_result_summary_displays_model_count(models_page: ModelsPage) -> 
     
 @pytest.mark.regression
 @pytest.mark.models
-def test_search_existing_model(models_page: ModelsPage, model_test_data: dict) -> None:
+def test_search_existing_model(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:
     """
     Verify that searching for an existing model name returns the correct result in the table.
     """
-    model_name = model_test_data["models_search"]["existing_model_name"]
+    model_name = model_test_data["models_search"][env_name]["existing_model_name"]
 
     models_page.search_model(model_name)
     models_page.verify_search_value(model_name)
@@ -75,8 +75,8 @@ def test_search_existing_model(models_page: ModelsPage, model_test_data: dict) -
 
 @pytest.mark.regression
 @pytest.mark.models
-def test_search_partial_model_name(models_page: ModelsPage, model_test_data: dict) -> None:
-    partial_name = model_test_data["models_search"]["partial_model_name"]
+def test_search_partial_model_name(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:
+    partial_name = model_test_data["models_search"][env_name]["partial_model_name"]
     """
     Verify that searching with a partial model name returns relevant results in the table.
     """
@@ -89,11 +89,11 @@ def test_search_partial_model_name(models_page: ModelsPage, model_test_data: dic
 
 @pytest.mark.regression
 @pytest.mark.models
-def test_search_non_existing_model(models_page: ModelsPage, model_test_data: dict) -> None:
+def test_search_non_existing_model(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:
     """
     Verify that searching for a non-existing model name results in no matches found in the table.
     """
-    non_existing_name = model_test_data["models_search"]["non_existing_model_name"]
+    non_existing_name = model_test_data["models_search"][env_name]["non_existing_model_name"]
 
     models_page.search_model(non_existing_name)
     models_page.verify_search_value(non_existing_name)
@@ -103,11 +103,11 @@ def test_search_non_existing_model(models_page: ModelsPage, model_test_data: dic
 
 @pytest.mark.regression
 @pytest.mark.models
-def test_clear_search_input(models_page: ModelsPage, model_test_data: dict) -> None:
+def test_clear_search_input(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:
     """
     Verify that clearing the search input resets the table results and the search input value.
     """
-    model_name = model_test_data["models_search"]["existing_model_name"]
+    model_name = model_test_data["models_search"][env_name]["existing_model_name"]
 
     models_page.search_model(model_name)
     models_page.verify_search_value(model_name)
@@ -117,15 +117,15 @@ def test_clear_search_input(models_page: ModelsPage, model_test_data: dict) -> N
 
 @pytest.mark.regression
 @pytest.mark.models
-def test_verify_known_model_details_and_expand(models_page: ModelsPage, model_test_data: dict,) -> None:    
+def test_verify_known_model_details_and_expand(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:    
     """
     Verify that a known model row is visible, contains correct metadata,
     and can be expanded to reveal child model units.
     """
-    details_data = model_test_data["known_model_details"]
+    details_data = model_test_data["known_model_details"][env_name]
 
     model_name = details_data["model_name"]
-    child_row_text = details_data["child_row_text"]
+    child_row_texts = details_data["child_row_texts"]
     expected_status = details_data["expected_status"]
     expected_owner = details_data["expected_owner"]
 
@@ -144,15 +144,16 @@ def test_verify_known_model_details_and_expand(models_page: ModelsPage, model_te
     models_page.expand_model_row(model_name)
 
     # Verify child row appears
-    models_page.verify_row_visible(child_row_text)
+    for child_row_text in child_row_texts:
+        models_page.verify_row_visible(child_row_text)
 
 @pytest.mark.regression
 @pytest.mark.models
-def test_select_single_row(models_page: ModelsPage, model_test_data: dict) -> None:
+def test_select_single_row(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:
     """
     Verify that selecting a single model row by clicking its checkbox works correctly.
     """
-    row_text = model_test_data["known_model_details"]["model_name"]
+    row_text = model_test_data["known_model_details"][env_name]["model_name"]
 
     models_page.select_row(row_text)
     checkbox = models_page.get_row_checkbox(row_text)

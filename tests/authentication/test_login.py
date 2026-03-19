@@ -1,5 +1,6 @@
 import pytest
 from playwright.sync_api import Page
+
 from pages.login_page import LoginPage
 
 @pytest.mark.smoke
@@ -31,7 +32,8 @@ def test_verify_successful_login(login_page, dashboard_page, env_config):
 @pytest.mark.authentication
 def test_verify_invalid_login(login_page, login_test_data):
     """
-    Verify that an error message is shown when a user tries to log in with invalid credentials and that the user remains on the login page."""
+    Verify that an error message is shown when a user tries to log in with invalid credentials and that the user remains on the login page.
+    """
     invalid_case = login_test_data["invalid_login_cases"][0]
 
     login_page.navigate()

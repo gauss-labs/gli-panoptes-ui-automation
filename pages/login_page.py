@@ -1,11 +1,12 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import  expect, Page
+
 from pages.base_page import BasePage
 
 class LoginPage(BasePage):
     URL = "/login"
 
-    def __init__(self, page: Page, app_url: str):
-        super().__init__(page, app_url)
+    def __init__(self, page: Page, app_url: str, env_name: str):
+        super().__init__(page, app_url, env_name)
 
         self.username_input = page.get_by_label("Username")
         self.password_input = page.get_by_label("Password")
