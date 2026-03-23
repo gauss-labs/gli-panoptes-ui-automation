@@ -10,7 +10,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--env",
         action="store",
-        default="mothership_dev",
+        default="demo",
         help="Environment to run tests against"
     )
 

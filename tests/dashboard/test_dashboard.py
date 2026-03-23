@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from playwright.sync_api import expect, Page
 
@@ -238,5 +240,5 @@ def test_model_status_buttons_are_clickable(
     click_method()
 
     # Generic post-click stabilization check
-    logged_in_dashboard.wait_for_dashboard_refresh()
-    expect(logged_in_dashboard.my_models_card).to_be_visible()
+    # Clicking a model status button navigates to the Models page
+    expect(logged_in_dashboard.page).to_have_url(re.compile(r"/models"), timeout=10000)

@@ -11,7 +11,7 @@ class DashboardPage(BasePage):
         # === Main page / header ===
         self.main_content: Locator = page.locator("main")
         self.page_title: Locator = page.get_by_role("heading", name="dashboard")
-        self.last_updated_text: Locator = page.locator("header span").filter(has_text="last updated:")
+        self.last_updated_text: Locator = page.locator("header span").filter(has_text="Last updated at:")
 
         # === Dashboard cards ===
         self.total_published_wafer_card: Locator = page.locator("div").filter(has=page.get_by_role("heading", name="Total Published Wafer Count (YTD)")).first
