@@ -9,6 +9,10 @@ venv/
 # pytest
 .pytest_cache/
 
+# Test reports / artifacts
+reports/
+test-results/
+
 # VSCode
 .vscode/
 

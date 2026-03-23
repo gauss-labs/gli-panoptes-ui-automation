@@ -1,21 +1,8 @@
 import re
 
 import pytest
-from playwright.sync_api import expect, Page
 
-from pages.login_page import LoginPage
 from pages.models_page import ModelsPage
-
-@pytest.fixture
-def models_page(logged_in_page, app_url: str, env_name: str) -> ModelsPage:
-    """
-    Logs in first, then returns the Models page object.
-    """
-    models_page = ModelsPage(logged_in_page, app_url, env_name)
-    models_page.left_navigation.go_to_models()
-    models_page.wait_for_page_to_load()
-
-    return models_page
 
 def assert_result_summary_format(summary: str) -> None:
     assert "of" in summary
@@ -76,10 +63,10 @@ def test_search_existing_model(models_page: ModelsPage, model_test_data: dict, e
 @pytest.mark.regression
 @pytest.mark.models
 def test_search_partial_model_name(models_page: ModelsPage, model_test_data: dict, env_name: str) -> None:
-    partial_name = model_test_data["models_search"][env_name]["partial_model_name"]
     """
     Verify that searching with a partial model name returns relevant results in the table.
     """
+    partial_name = model_test_data["models_search"][env_name]["partial_model_name"]
     models_page.search_model(partial_name)
     models_page.verify_search_value(partial_name)
     models_page.wait_for_partial_search_results(partial_name)

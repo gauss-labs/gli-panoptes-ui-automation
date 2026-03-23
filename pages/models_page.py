@@ -283,15 +283,4 @@ class ModelsPage(BasePage):
 
     def verify_search_value(self, expected_value: str) -> None:
         expect(self.search_input).to_have_value(expected_value)
-
-    # ---------------------------------------------------------------------
-    # Helper methods
-    # ---------------------------------------------------------------------
-    def _is_button_enabled(self, button: Locator) -> bool:
-        aria_disabled = button.get_attribute("aria-disabled")
-        disabled_attr = button.get_attribute("disabled")
-
-        if aria_disabled == "true" or disabled_attr is not None:
-            return False
-
-        return button.is_enabled()
+    

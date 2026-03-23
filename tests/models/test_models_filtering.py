@@ -1,24 +1,12 @@
 import logging
 
 import pytest
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect
 
 from pages.components.filter_modal import FilterModal
-from pages.login_page import LoginPage
 from pages.models_page import ModelsPage
 
 logger = logging.getLogger(__name__)
-
-@pytest.fixture
-def models_page(logged_in_page, app_url: str, env_name: str) -> ModelsPage:
-    """
-    Logs in first, then navigates to the Models page.
-    """
-    models_page = ModelsPage(logged_in_page, app_url, env_name)
-    models_page.left_navigation.go_to_models()
-    models_page.wait_for_page_to_load()
-
-    return models_page
 
 @pytest.fixture
 def filter_modal(models_page: ModelsPage) -> FilterModal:
@@ -75,8 +63,6 @@ def test_verify_owner_filter_options_are_loaded(filter_modal: FilterModal) -> No
 
     logger.info("Owner options count: %s", len(owner_options))
     logger.info("Owner options: %s", owner_options)
-    print(f"Owner options count: {len(owner_options)}")
-    print(f"Owner options: {owner_options}")
 
     assert len(owner_options) > 0, "Expected at least one Owner filter option to be displayed."
 
@@ -128,8 +114,6 @@ def test_log_owner_filter_options(filter_modal: FilterModal):
     owner_options = filter_modal.get_visible_filter_options("Owner")
 
     assert len(owner_options) > 0
-    print(f"Owner options count: {len(owner_options)}")
-    print(f"Owner options: {owner_options}")
 
 @pytest.mark.regression
 @pytest.mark.models

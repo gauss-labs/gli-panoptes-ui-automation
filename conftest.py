@@ -57,8 +57,11 @@ def dashboard_page(page, app_url, env_name) -> DashboardPage:
 
 
 @pytest.fixture
-def models_page(page, app_url, env_name) -> ModelsPage:
-    return ModelsPage(page, app_url, env_name)
+def models_page(logged_in_page, app_url, env_name) -> ModelsPage:
+    mp = ModelsPage(logged_in_page, app_url, env_name)
+    mp.left_navigation.go_to_models()
+    mp.wait_for_page_to_load()
+    return mp
 
 
 @pytest.fixture
@@ -70,4 +73,5 @@ def logged_in_page(page, env_config, env_name):
     login_page = LoginPage(page, env_config["base_url"], env_name)
     login_page.navigate()
     login_page.login(env_config["username"], env_config["password"])
+    login_page.verify_login_successful()
     return page

@@ -121,9 +121,6 @@ class DashboardPage(BasePage):
         expect(self.no_recently_viewed_models_text).to_be_visible()
 
     def verify_chart_selections_visible(self) -> None:
-        print("published monthly count:", self.published_wafers_card.get_by_role("button", name="monthly").count())
-        print("created monthly count:", self.created_models_card.get_by_role("button", name="monthly").count())
-
         expect(self.published_wafers_monthly_tab).to_be_visible()
         expect(self.published_wafers_weekly_tab).to_be_visible()
         expect(self.published_wafers_chart_container).to_be_visible()
@@ -131,9 +128,6 @@ class DashboardPage(BasePage):
         expect(self.created_models_monthly_tab).to_be_visible()
         expect(self.created_models_weekly_tab).to_be_visible()
         expect(self.created_models_chart_container).to_be_visible()
-
-    def verify_dashboard_header_visible(self) -> None:
-        expect(self.page_title).to_be_visible()
 
     def verify_total_published_wafer_count_visible(self) -> None:
         expect(self.total_published_wafer_heading).to_be_visible()

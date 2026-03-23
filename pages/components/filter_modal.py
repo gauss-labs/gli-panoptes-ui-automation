@@ -1,8 +1,7 @@
 import logging
-import time
 from typing import List, Optional
 
-from playwright.sync_api import  Locator, Page, expect
+from playwright.sync_api import Locator, Page, expect
 
 logger = logging.getLogger(__name__)
 
@@ -143,35 +142,19 @@ class FilterModal:
         if category_name:
             self.open_filter_category(category_name)
 
-        end_time = time.time() + (timeout_ms / 1000)
-        last_seen_options: List[str] = []
+        labels = self.option_labels()
+        expect(labels.nth(min_expected - 1)).to_be_visible(timeout=timeout_ms)
 
-        while time.time() < end_time:
-            option_labels = self.option_labels()
-            count = option_labels.count()
+        options = [
+            text
+            for i in range(labels.count())
+            if (text := labels.nth(i).inner_text().strip())
+        ]
 
-            options = []
-            for i in range(count):
-                text = option_labels.nth(i).inner_text().strip()
-                if text:
-                    options.append(text)
+        logger.info("Visible filter option count: %s", len(options))
+        logger.info("Visible filter options: %s", options)
+        return options
 
-            last_seen_options = options
-
-            if len(options) >= min_expected:
-                logger.info("Visible filter option count: %s", len(options))
-                logger.info("Visible filter options: %s", options)
-                return options
-
-            self.page.wait_for_timeout(500)
-
-        logger.info("Visible filter option count: %s", len(last_seen_options))
-        logger.info("Visible filter options: %s", last_seen_options)
-
-        raise AssertionError(
-            "Expected at least %s visible filter options, but found %s."
-            % (min_expected, len(last_seen_options))
-        )
     def get_first_visible_filter_option(self, category_name: str, timeout_ms: int = 10000) -> str:
         return self.get_visible_filter_options(
             category_name=category_name,
