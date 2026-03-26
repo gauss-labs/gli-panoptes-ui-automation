@@ -46,6 +46,7 @@ jobs:
       ZEPHYR_RESULTS_FILE: reports/results.xml
       ZEPHYR_TEST_CYCLE_NAME: "${{ inputs.suite }} - ${{ inputs.test_type }} - Run ${{ github.run_number }}"
       ZEPHYR_TEST_CYCLE_DESCRIPTION: "GitHub Actions automated run"
+      ZEPHYR_ARTIFACT_NOTE: "screenshots / trace / video uploaded in GitHub run ${{ github.run_number }}"
 
     steps:
       - name: Checkout repository

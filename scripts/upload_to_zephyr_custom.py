@@ -108,6 +108,14 @@ def build_execution(testcase: ET.Element) -> Optional[Dict[str, Any]]:
     else:
         comment_parts.append("<b>Result:</b> Passed")
 
+    github_run_url = build_github_run_url()
+    if github_run_url:
+        comment_parts.append(f"<b>GitHub Run:</b> {github_run_url}")
+
+    artifact_note = os.getenv("ZEPHYR_ARTIFACT_NOTE", "").strip()
+    if artifact_note:
+        comment_parts.append(f"<b>Artifacts:</b> {artifact_note}")
+
     if comment_parts:
         execution["comment"] = "<br><br>".join(comment_parts)
 
@@ -285,6 +293,16 @@ def format_failure_message(message: str) -> str:
     formatted = re.sub(r'\s+-\s+unexpected value\b', r'<br>- unexpected value', formatted)
 
     return formatted
+
+def build_github_run_url() -> str:
+    server_url = os.getenv("GITHUB_SERVER_URL", "").strip()
+    repository = os.getenv("GITHUB_REPOSITORY", "").strip()
+    run_id = os.getenv("GITHUB_RUN_ID", "").strip()
+
+    if server_url and repository and run_id:
+        return f"{server_url}/{repository}/actions/runs/{run_id}"
+
+    return ""
 
 def main() -> None:
     token = require_env("ZEPHYR_TOKEN")

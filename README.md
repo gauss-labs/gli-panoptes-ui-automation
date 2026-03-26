@@ -124,6 +124,7 @@ Run only Models tests:
 03/26/2026
 - Added Zephyr test mapping, execution upload, and formatted failure comments
 - Added GitHub Actions inputs to select environment, test suite, and test type for flexible test execution
+- Enhanced Zephyr comments with GitHub artifact references, allowing easy access to failure evidence such as screenshots, traces, and videos
 - Deleted testcases with duplicate validations
 
 
