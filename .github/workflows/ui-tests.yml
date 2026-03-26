@@ -70,8 +70,8 @@ jobs:
           mkdir -p reports
           mkdir -p test-results
 
-      - name: Build pytest command
-        id: build_cmd
+      - name: Build pytest marker
+        id: build_marker
         shell: bash
         run: |
           MARKER=""
@@ -84,18 +84,17 @@ jobs:
             MARKER="${{ inputs.test_type }}"
           fi
 
-          CMD="pytest --env=${{ inputs.environment }}"
-
-          if [ -n "$MARKER" ]; then
-            CMD="$CMD -m \"$MARKER\""
-          fi
-
-          echo "cmd=$CMD" >> $GITHUB_OUTPUT
-          echo "Pytest command: $CMD"
+          echo "marker=$MARKER" >> $GITHUB_OUTPUT
+          echo "Pytest marker: $MARKER"
 
       - name: Run UI tests
         shell: bash
-        run: eval ${{ steps.build_cmd.outputs.cmd }}
+        run: |
+          if [ -n "${{ steps.build_marker.outputs.marker }}" ]; then
+            pytest --env=${{ inputs.environment }} -m "${{ steps.build_marker.outputs.marker }}"
+          else
+            pytest --env=${{ inputs.environment }}
+          fi
 
       - name: Upload results to Zephyr
         if: always()
