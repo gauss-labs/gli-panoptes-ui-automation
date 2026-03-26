@@ -16,6 +16,7 @@ def logged_in_dashboard(logged_in_page, app_url: str, env_name: str) -> Dashboar
 # =========================================================
 # Smoke / Page Load
 # =========================================================
+@pytest.mark.tc_key("QAVM-T19")
 @pytest.mark.smoke
 @pytest.mark.dashboard
 def test_dashboard_page_loads_successfully(logged_in_dashboard: DashboardPage) -> None:
@@ -24,18 +25,11 @@ def test_dashboard_page_loads_successfully(logged_in_dashboard: DashboardPage) -
     """
     logged_in_dashboard.verify_dashboard_page_loaded()
 
-@pytest.mark.smoke
-@pytest.mark.dashboard
-def test_dashboard_header_is_visible(logged_in_dashboard: DashboardPage) -> None:
-    """
-    Verify that the main header of the dashboard is visible.
-    """
-    logged_in_dashboard.verify_dashboard_header_visible()
-
 # =========================================================
 # Core Widget Visibility
 # =========================================================
-@pytest.mark.regression
+@pytest.mark.tc_key("QAVM-T30")
+@pytest.mark.smoke
 @pytest.mark.dashboard
 def test_dashboard_core_widgets_are_visible(logged_in_dashboard: DashboardPage) -> None:
     """
@@ -43,42 +37,29 @@ def test_dashboard_core_widgets_are_visible(logged_in_dashboard: DashboardPage) 
     """
     logged_in_dashboard.verify_dashboard_core_widgets_visible()
 
-@pytest.mark.regression
+@pytest.mark.tc_key("QAVM-T31")
+@pytest.mark.smoke
 @pytest.mark.dashboard
 def test_all_main_dashboard_sections_are_visible(logged_in_dashboard: DashboardPage) -> None:
     """
-    Verify that all major dashboardsections/widgets are visible.
+    Verify that Published Wafer [Monthly/Weekly] and Created Models [Monthly/Weekly] are visible.
     """
     logged_in_dashboard.verify_all_main_sections_visible()
-
-@pytest.mark.regression
-@pytest.mark.dashboard
-def test_main_chart_is_visible(logged_in_dashboard: DashboardPage) -> None:
-    """
-    Verify that the main chart in the Published Wafers section is visible.
-    """
-    logged_in_dashboard.verify_main_chart_visible()
 
 # =========================================================
 # Total Published Wafer Count
 # =========================================================
-@pytest.mark.regression
+@pytest.mark.tc_key("QAVM-T20")
+@pytest.mark.smoke
 @pytest.mark.dashboard
 def test_total_published_wafer_card_is_visible(logged_in_dashboard: DashboardPage) -> None:
     """
-    Verify that the Total Published Wafer Count card is visible on the dashboard.
+    Verify that the Total Published Wafer Count card and value are visible on the dashboard.
     """
     logged_in_dashboard.verify_total_published_wafer_card_visible()
 
-@pytest.mark.regression
-@pytest.mark.dashboard
-def test_total_published_wafer_count_is_visible(logged_in_dashboard: DashboardPage) -> None:
-    """
-    Verify that the Total Published Wafer Count section is visible on the dashboard.
-    """
-    logged_in_dashboard.verify_total_published_wafer_count_visible()
-
-@pytest.mark.regression
+@pytest.mark.tc_key("QAVM-T32")
+@pytest.mark.smoke
 @pytest.mark.dashboard
 def test_dashboard_page_contains_numeric_summary_data(logged_in_dashboard: DashboardPage) -> None:
     """
@@ -96,20 +77,14 @@ def test_dashboard_page_contains_numeric_summary_data(logged_in_dashboard: Dashb
 # =========================================================
 # My Models Section
 # =========================================================
-@pytest.mark.regression
-@pytest.mark.dashboard
-def test_my_models_section_is_visible(logged_in_dashboard: DashboardPage) -> None:
-    """
-    Verify that the My Models section is visible on the dashboard.
-    """
-    logged_in_dashboard.verify_my_models_sections_visible()
-
+@pytest.mark.tc_key("QAVM-T21")
 @pytest.mark.regression
 @pytest.mark.dashboard
 def test_my_models_total_count_is_not_empty(logged_in_dashboard: DashboardPage) -> None:
     """
     Verify that the total count in My Models section is not empty and contains numeric data.
     """
+    logged_in_dashboard.verify_my_models_sections_visible()
     value = logged_in_dashboard.get_my_models_total_count()
 
     assert value is not None
@@ -117,6 +92,7 @@ def test_my_models_total_count_is_not_empty(logged_in_dashboard: DashboardPage) 
     normalized = value.replace(",", "").strip()
     assert normalized.isdigit(), f"Expected numeric my models total count, but got '{value}'"
 
+@pytest.mark.tc_key("QAVM-T22")
 @pytest.mark.regression
 @pytest.mark.dashboard
 @pytest.mark.parametrize(
@@ -142,6 +118,36 @@ def test_each_model_status_count_is_numeric(
     assert value.strip() != ""
     normalized = value.replace(",", "").strip()
     assert normalized.isdigit(), f"Expected numeric value from {getter_name}, but got '{value}'"
+
+@pytest.mark.tc_key("QAVM-T33")
+@pytest.mark.regression
+@pytest.mark.dashboard
+@pytest.mark.parametrize(
+    "click_method_name,row_attr_name",
+    [
+        ("click_active_models", "active_models_row"),
+        ("click_inactive_models", "inactive_models_row"),
+        ("click_failed_models", "failed_models_row"),
+        ("click_others_models", "others_models_row"),
+    ],
+)
+def test_model_status_buttons_are_clickable(
+    logged_in_dashboard: DashboardPage,
+    click_method_name: str,
+    row_attr_name: str,
+) -> None:
+    """
+    Verify that the buttons for each model status in My Models section are clickable and lead to the expected results.
+    """
+    row = getattr(logged_in_dashboard, row_attr_name)
+    expect(row).to_be_visible()
+
+    click_method = getattr(logged_in_dashboard, click_method_name)
+    click_method()
+
+    # Generic post-click stabilization check
+    # Clicking a model status button navigates to the Models page
+    expect(logged_in_dashboard.page).to_have_url(re.compile(r"/models"), timeout=10000)
 
 # =========================================================
 # Recently Viewed Models
@@ -214,31 +220,3 @@ def test_created_models_tabs_are_clickable(logged_in_dashboard: DashboardPage) -
 # =========================================================
 # My Models Actions
 # =========================================================
-@pytest.mark.regression
-@pytest.mark.dashboard
-@pytest.mark.parametrize(
-    "click_method_name,row_attr_name",
-    [
-        ("click_active_models", "active_models_row"),
-        ("click_inactive_models", "inactive_models_row"),
-        ("click_failed_models", "failed_models_row"),
-        ("click_others_models", "others_models_row"),
-    ],
-)
-def test_model_status_buttons_are_clickable(
-    logged_in_dashboard: DashboardPage,
-    click_method_name: str,
-    row_attr_name: str,
-) -> None:
-    """
-    Verify that the buttons for each model status in My Models section are clickable and lead to the expected results.
-    """
-    row = getattr(logged_in_dashboard, row_attr_name)
-    expect(row).to_be_visible()
-
-    click_method = getattr(logged_in_dashboard, click_method_name)
-    click_method()
-
-    # Generic post-click stabilization check
-    # Clicking a model status button navigates to the Models page
-    expect(logged_in_dashboard.page).to_have_url(re.compile(r"/models"), timeout=10000)

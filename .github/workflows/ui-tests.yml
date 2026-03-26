@@ -2,11 +2,50 @@ name: UI Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: "demo"
+        type: choice
+        options:
+          - demo
+          - mothership_dev
+          - mothership_stg
+
+      suite:
+        description: "Test suite to run"
+        required: true
+        default: "authentication"
+        type: choice
+        options:
+          - authentication
+          - dashboard
+          - models
+          - all
+
+      test_type:
+        description: "Test marker to run"
+        required: true
+        default: "smoke"
+        type: choice
+        options:
+          - smoke
+          - regression
+          - all
 
 jobs:
   ui-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
+    env:
+      TEST_ENV: ${{ inputs.environment }}
+      ZEPHYR_TOKEN: ${{ secrets.ZEPHYR_TOKEN }}
+      ZEPHYR_PROJECT_KEY: QAVM
+      ZEPHYR_RESULTS_FILE: reports/results.xml
+      ZEPHYR_TEST_CYCLE_NAME: "${{ inputs.suite }} - ${{ inputs.test_type }} - Run ${{ github.run_number }}"
+      ZEPHYR_TEST_CYCLE_DESCRIPTION: "GitHub Actions automated run"
 
     steps:
       - name: Checkout repository
@@ -31,14 +70,42 @@ jobs:
           mkdir -p reports
           mkdir -p test-results
 
+      - name: Build pytest command
+        id: build_cmd
+        shell: bash
+        run: |
+          MARKER=""
+
+          if [ "${{ inputs.suite }}" != "all" ] && [ "${{ inputs.test_type }}" != "all" ]; then
+            MARKER="${{ inputs.suite }} and ${{ inputs.test_type }}"
+          elif [ "${{ inputs.suite }}" != "all" ]; then
+            MARKER="${{ inputs.suite }}"
+          elif [ "${{ inputs.test_type }}" != "all" ]; then
+            MARKER="${{ inputs.test_type }}"
+          fi
+
+          CMD="pytest --env=${{ inputs.environment }}"
+
+          if [ -n "$MARKER" ]; then
+            CMD="$CMD -m \"$MARKER\""
+          fi
+
+          echo "cmd=$CMD" >> $GITHUB_OUTPUT
+          echo "Pytest command: $CMD"
+
       - name: Run UI tests
-        run: pytest --env=demo
+        shell: bash
+        run: eval ${{ steps.build_cmd.outputs.cmd }}
+
+      - name: Upload results to Zephyr
+        if: always()
+        run: python scripts/upload_to_zephyr_custom.py
 
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: ui-test-artifacts
+          name: ui-test-artifacts-${{ github.run_number }}
           path: |
             reports/
             test-results/

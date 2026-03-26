@@ -121,6 +121,12 @@ Run only Models tests:
     pytest -m models
 
 ## Recent Updates
+03/26/2026
+- Added Zephyr test mapping, execution upload, and formatted failure comments
+- Added GitHub Actions inputs to select environment, test suite, and test type for flexible test execution
+- Deleted testcases with duplicate validations
+
+
 03/23/2026
 - Fixed README (formatting issues)
 - Added HTML report output

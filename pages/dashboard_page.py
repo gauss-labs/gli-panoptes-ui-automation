@@ -80,13 +80,8 @@ class DashboardPage(BasePage):
     # ==========================================
     # Assertions
     # ==========================================
-    def verify_dashboard_header_visible(self) -> None:
-        expect(self.page_title).to_be_visible()
-
     def verify_dashboard_core_widgets_visible(self) -> None:
-        self.verify_dashboard_header_visible()
         expect(self.last_updated_text).to_be_visible()
-
         expect(self.total_published_wafer_card).to_be_visible()
         expect(self.my_models_card).to_be_visible()
         expect(self.recently_viewed_models_card).to_be_visible()
@@ -99,12 +94,8 @@ class DashboardPage(BasePage):
         expect(self.total_published_wafer_value).to_be_visible()
 
     def verify_all_main_sections_visible(self) -> None:
-        self.verify_dashboard_core_widgets_visible()
         self.verify_my_models_sections_visible()
         self.verify_chart_selections_visible()
-    
-    def verify_main_chart_visible(self) -> None:
-        expect(self.published_wafers_chart_container).to_be_visible()
 
     def verify_my_models_sections_visible(self) -> None:
         expect(self.active_models_row).to_be_visible()

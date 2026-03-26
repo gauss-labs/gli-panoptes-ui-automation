@@ -3,8 +3,8 @@ from playwright.sync_api import Page
 
 from pages.login_page import LoginPage
 
+@pytest.mark.tc_key("QAVM-T8")
 @pytest.mark.smoke
-@pytest.mark.regression
 @pytest.mark.authentication
 def test_verify_login_page_loads_successfully(login_page):
     """
@@ -13,6 +13,7 @@ def test_verify_login_page_loads_successfully(login_page):
     login_page.navigate()
     login_page.verify_login_page_loaded()
 
+@pytest.mark.tc_key("QAVM-T9")
 @pytest.mark.smoke
 @pytest.mark.regression
 @pytest.mark.authentication
@@ -28,6 +29,7 @@ def test_verify_successful_login(login_page, dashboard_page, env_config):
     dashboard_page.verify_dashboard_page_loaded()
     dashboard_page.wait_for_page_to_load()
 
+@pytest.mark.tc_key("QAVM-T10")
 @pytest.mark.regression
 @pytest.mark.authentication
 def test_verify_invalid_login(login_page, login_test_data):
@@ -41,29 +43,26 @@ def test_verify_invalid_login(login_page, login_test_data):
     login_page.verify_invalid_login_message()
     login_page.verify_still_on_login_page()
 
+@pytest.mark.tc_key("QAVM-T12")
 @pytest.mark.regression
 @pytest.mark.authentication
-@pytest.mark.parametrize(
-    "case_index,expected_check",
-    [
-        (2, "password"),
-        (3, "username"),
-    ]
-)
-def test_verify_login_with_partial_credentials(
-    login_page,
-    login_test_data,
-    case_index,
-    expected_check
-):
-    case = login_test_data["invalid_login_cases"][case_index]
+def test_login_with_missing_username(login_page, login_test_data):
+    case = login_test_data["invalid_login_cases"][3]
 
     login_page.navigate()
     login_page.login(case["username"], case["password"])
 
-    if expected_check == "password":
-        login_page.verify_password_invalid_message()
-    elif expected_check == "username":
-        login_page.verify_username_required_message()
+    login_page.verify_username_required_message()
+    login_page.verify_still_on_login_page()
 
+@pytest.mark.tc_key("QAVM-T29")
+@pytest.mark.regression
+@pytest.mark.authentication
+def test_login_with_missing_password(login_page, login_test_data):
+    case = login_test_data["invalid_login_cases"][2]
+
+    login_page.navigate()
+    login_page.login(case["username"], case["password"])
+
+    login_page.verify_password_invalid_message()
     login_page.verify_still_on_login_page()

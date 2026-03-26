@@ -75,3 +75,12 @@ def logged_in_page(page, env_config, env_name):
     login_page.login(env_config["username"], env_config["password"])
     login_page.verify_login_successful()
     return page
+
+def pytest_runtest_makereport(item, call):
+    if call.when == "call":
+        tc_marker = item.get_closest_marker("tc_key")
+        if tc_marker:
+            tc_key = tc_marker.args[0]
+
+            if hasattr(item, "user_properties"):
+                item.user_properties.append(("test_key", tc_key))
